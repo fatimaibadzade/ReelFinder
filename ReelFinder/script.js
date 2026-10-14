@@ -1,8 +1,4 @@
-/* ReelFinder — Movie Explorer
-   Get a TMDB Read Access Token at https://www.themoviedb.org/settings/api
-   Keep your token private. Do not publish a real token in a public repository.
-*/
-const TMDB_TOKEN = "PASTE_YOUR_TMDB_READ_ACCESS_TOKEN_HERE";
+const TMDB_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0NDI3MzgxOTIzMTgxMDA0YjYyYzk3YzJhMzFiNjRhNSIsIm5iZiI6MTc5MTk4NTA3NS4xODksInN1YiI6IjZhY2Y4NWIzOGVhMTI2ODM3MThmMzUzMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.m8NFP9h8Nni2xoneH2SeDZb5QCezeh2QQadHVZbcGbc";
 const API_URL = "https://api.themoviedb.org/3";
 const IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 const BACKDROP_URL = "https://image.tmdb.org/t/p/w1280";
@@ -107,8 +103,28 @@ function formatDate(date) {
 function movieTitle(movie) { return movie.title || movie.name || t("notAvailable"); }
 function movieYear(movie) { return movie.release_date ? movie.release_date.slice(0, 4) : movie.first_air_date ? movie.first_air_date.slice(0, 4) : "—"; }
 function imageMarkup(path, title, extraClass = "poster") {
-  if (!path) return `<div class="poster-placeholder">🎬<br>${escapeHTML(title)}</div>`;
-  return `<img class="${extraClass}" src="${IMAGE_URL}${path}" alt="${escapeHTML(title)}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'poster-placeholder',textContent:'🎬 ${escapeHTML(title)}'}))">`;
+  const safeTitle = escapeHTML(title);
+  if (!path) {
+    return `<div class="poster-placeholder"><span class="poster-placeholder-icon">🎬</span><span>${safeTitle}</span></div>`;
+  }
+
+  const imageURL = `${IMAGE_URL}${path}`;
+  return `
+    <img
+      class="${extraClass}"
+      src="${imageURL}"
+      alt="Постер: ${safeTitle}"
+      loading="eager"
+      decoding="async"
+      referrerpolicy="no-referrer"
+      onerror="this.onerror=null;this.classList.add('poster-image-error');this.hidden=true;this.nextElementSibling.hidden=false;"
+    >
+    <div class="poster-placeholder" hidden>
+      <span class="poster-placeholder-icon">🎬</span>
+      <span>${safeTitle}</span>
+      <small>Постер недоступен</small>
+    </div>
+  `;
 }
 
 function applyLanguage() {
