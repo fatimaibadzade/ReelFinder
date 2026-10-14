@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ReelFinder — find and explore movies." />
+  <title>ReelFinder — Movie Explorer</title>
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="#home" aria-label="ReelFinder home"><span class="logo-icon">▶</span> ReelFinder</a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <button class="nav-button active" data-section="popular" type="button" data-i18n="popular">Популярные</button>
+      <button class="nav-button" data-section="top_rated" type="button" data-i18n="topRated">Лучшие</button>
+      <button class="nav-button" data-section="now_playing" type="button" data-i18n="nowPlaying">В кино</button>
+      <button class="nav-button" data-section="trending" type="button" data-i18n="trending">Тренды</button>
+      <button class="nav-button" data-section="favorites" type="button"><span data-i18n="favorites">Избранное</span> <span id="favoriteCount" class="favorite-count">0</span></button>
+    </nav>
+    <div class="header-actions">
+      <label class="sr-only" for="languageSelect" data-i18n="language">Язык</label>
+      <select id="languageSelect" class="language-select" aria-label="Language">
+        <option value="ru">RU</option>
+        <option value="en">EN</option>
+        <option value="az">AZ</option>
+      </select>
+      <button id="themeToggle" class="icon-button" type="button" aria-label="Toggle theme" title="Toggle theme">☼</button>
+    </div>
+  </header>
+
+  <main id="home" class="container">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow" data-i18n="heroEyebrow">ТВОЯ СЛЕДУЮЩАЯ ИСТОРИЯ НАЧИНАЕТСЯ ЗДЕСЬ</p>
+        <h1 data-i18n="heroTitle">Найди фильм под своё настроение.</h1>
+        <p class="hero-description" data-i18n="heroDescription">Исследуй популярные премьеры, оценивай рейтинги и сохраняй фильмы, которые хочешь посмотреть.</p>
+      </div>
+      <form id="searchForm" class="search-form">
+        <span class="search-symbol" aria-hidden="true">⌕</span>
+        <input id="searchInput" type="search" autocomplete="off" data-i18n-placeholder="searchPlaceholder" placeholder="Название фильма..." />
+        <button type="submit" class="primary-button" data-i18n="search">Найти</button>
+      </form>
+    </section>
+
+    <section class="filter-panel" aria-label="Movie filters">
+      <div class="filter-heading">
+        <div>
+          <p class="eyebrow" data-i18n="discoverEyebrow">ВЫБИРАЙ И ОТКРЫВАЙ</p>
+          <h2 id="sectionTitle" data-i18n="popularMovies">Популярные фильмы</h2>
+        </div>
+        <button id="resetFilters" class="text-button" type="button" data-i18n="resetFilters">Сбросить фильтры</button>
+      </div>
+      <div class="filters">
+        <label class="filter-control"><span data-i18n="genre">Жанр</span><select id="genreFilter"><option value="" data-i18n="allGenres">Все жанры</option></select></label>
+        <label class="filter-control"><span data-i18n="year">Год</span><select id="yearFilter"><option value="" data-i18n="allYears">Все годы</option></select></label>
+        <label class="filter-control"><span data-i18n="minRating">Минимальный рейтинг</span><select id="ratingFilter"><option value="0" data-i18n="anyRating">Любой рейтинг</option><option value="5">5.0+</option><option value="6">6.0+</option><option value="7">7.0+</option><option value="8">8.0+</option></select></label>
+        <label class="filter-control"><span data-i18n="sortBy">Сортировка</span><select id="sortFilter"><option value="default" data-i18n="recommended">Рекомендуемые</option><option value="rating" data-i18n="ratingHigh">Сначала высокий рейтинг</option><option value="date" data-i18n="newest">Сначала новые</option><option value="title" data-i18n="titleAZ">Название A–Z</option></select></label>
+      </div>
+    </section>
+
+    <div id="statusMessage" class="status-message" role="status" aria-live="polite" hidden></div>
+    <section id="movieGrid" class="movie-grid" aria-label="Movies"></section>
+    <div id="emptyState" class="empty-state" hidden>
+      <div class="empty-icon">🎬</div>
+      <h3 data-i18n="noMovies">Фильмы не найдены</h3>
+      <p data-i18n="noMoviesDescription">Попробуй изменить запрос или фильтры.</p>
+    </div>
+    <div class="pagination">
+      <button id="prevPage" class="secondary-button" type="button" data-i18n="previous">← Назад</button>
+      <span id="pageInfo">1 / 1</span>
+      <button id="nextPage" class="secondary-button" type="button" data-i18n="next">Вперёд →</button>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>© <span id="currentYear"></span> ReelFinder</p>
+    <p data-i18n="footerText">Данные о фильмах предоставлены The Movie Database (TMDB).</p>
+  </footer>
+
+  <div id="movieModal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button id="closeModal" class="modal-close" type="button" aria-label="Close">×</button>
+      <div id="modalContent" class="modal-content"></div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="script.js" defer></script>
+</body>
+</html>
